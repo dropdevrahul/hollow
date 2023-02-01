@@ -1,0 +1,83 @@
+# Compilation provided by Compiler Explorer at https://godbolt.org/
+dump:
+        push    rbp
+        mov     rbp, rsp
+        sub     rsp, 96
+        mov     DWORD  [rbp-84], edi
+        mov     eax, DWORD  [rbp-84]
+        mov     DWORD  [rbp-8], eax
+        cmp     DWORD  [rbp-8], 0
+        jns     .L2
+        neg     DWORD  [rbp-84]
+.L2:
+        mov     DWORD  [rbp-4], 0
+        mov     BYTE  [rbp-17], 10
+        add     DWORD  [rbp-4], 1
+.L3:
+        mov     ecx, DWORD  [rbp-84]
+        movsx   rax, ecx
+        imul    rax, rax, 1717986919
+        shr     rax, 32
+        mov     edx, eax
+        sar     edx, 2
+        mov     eax, ecx
+        sar     eax, 31
+        sub     edx, eax
+        mov     eax, edx
+        sal     eax, 2
+        add     eax, edx
+        add     eax, eax
+        sub     ecx, eax
+        mov     edx, ecx
+        mov     eax, edx
+        lea     ecx, [rax+48]
+        mov     eax, DWORD  [rbp-4]
+        cdqe
+        mov     edx, 63
+        sub     rdx, rax
+        mov     eax, ecx
+        mov     BYTE  [rbp-80+rdx], al
+        add     DWORD  [rbp-4], 1
+        mov     eax, DWORD  [rbp-84]
+        movsx   rdx, eax
+        imul    rdx, rdx, 1717986919
+        shr     rdx, 32
+        mov     ecx, edx
+        sar     ecx, 2
+        cdq
+        mov     eax, ecx
+        sub     eax, edx
+        mov     DWORD  [rbp-84], eax
+        cmp     DWORD  [rbp-84], 0
+        jg      .L3
+        cmp     DWORD  [rbp-8], 0
+        jns     .L4
+        mov     eax, DWORD  [rbp-4]
+        cdqe
+        mov     edx, 63
+        sub     rdx, rax
+        mov     BYTE  [rbp-80+rdx], 45
+        add     DWORD  [rbp-4], 1
+.L4:
+        mov     eax, DWORD  [rbp-4]
+        cdqe
+        mov     edx, 63
+        sub     rdx, rax
+        mov     BYTE  [rbp-80+rdx], 0
+        add     DWORD  [rbp-4], 1
+        mov     eax, DWORD  [rbp-4]
+        cdqe
+        mov     edx, DWORD  [rbp-4]
+        movsx   rdx, edx
+        mov     ecx, 64
+        sub     rcx, rdx
+        lea     rdx, [rbp-80]
+        add     rcx, rdx
+        mov     rdx, rax
+        mov     rsi, rcx
+        mov     edi, 1
+        mov     eax, 1 
+        syscall
+        nop
+        leave
+        ret
