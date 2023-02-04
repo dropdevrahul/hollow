@@ -42,17 +42,15 @@ func Equals(x int) Op {
 	}
 }
 
-func Var(v string, o int) Op {
-	return Op{
-		N: OP_VAR,
-		O: o,
-		V: v,
-	}
-}
-
 func OpIf() Op {
 	return Op{
 		N: OP_IF,
+	}
+}
+
+func OpElse() Op {
+	return Op{
+		N: OP_ELSE,
 	}
 }
 
@@ -66,16 +64,21 @@ func MakeBlocks(p Program) Program {
 	// set blocks for jump operations like If etc
 	stack := []int{}
 	for i, op := range p {
-		if op.N == OP_IF {
+		switch op.N {
+		// in case of if we jump to end in case of false
+		case OP_IF:
 			stack = append(stack, i)
-		} else if op.N == OP_END {
-			// pop
+		case OP_ELSE:
+			stack = append(stack, i)
+		case OP_END:
+			// pop()
 			if_index := stack[len(stack)-1]
 			stack = stack[:len(stack)-1]
-			if p[if_index].N != OP_IF {
-				log.Panic("No if block for end")
+			if p[if_index].N != OP_IF &&
+				p[if_index].N != OP_ELSE {
+				log.Panicf("Invalid end token %d", p[if_index].N)
 			}
-			p[if_index].O = i
+			p[if_index].JMP = i
 		}
 	}
 
@@ -135,6 +138,10 @@ func Tokenize(fpath string) (Program, error) {
 		case S_OP_IF:
 			// find end
 			o := OpIf()
+			p = append(p, o)
+		case S_OP_ELSE:
+			// find end
+			o := OpElse()
 			p = append(p, o)
 		case S_OP_END:
 			// find end

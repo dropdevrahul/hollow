@@ -8,7 +8,6 @@ import (
 )
 
 func Compile(program []Op, output string) {
-	var vars []Op
 	b, err := os.ReadFile("hbin/dump.hbin")
 	if err != nil {
 		log.Fatal(err)
@@ -44,14 +43,14 @@ func Compile(program []Op, output string) {
 		case OP_DUMP:
 			f.WriteString("    pop rdi\n")
 			f.WriteString("    call dump\n")
-		case OP_VAR:
-			vars = append(vars, op)
 		case OP_IF:
 			f.WriteString("    pop rax\n")
 			// set zf = 1 if rax is 0
 			f.WriteString("    test rax, rax\n")
-			// jump to end block  if zf == 1 i.e condition if false
-			f.WriteString(fmt.Sprintf("    jz addr_%d\n", op.O))
+			// jump to jmp address block if zf == 1 i.e condition is false
+			f.WriteString(fmt.Sprintf("    jz addr_%d\n", op.JMP))
+		case OP_ELSE:
+			f.WriteString(fmt.Sprintf("    jmp addr_%d\n", op.JMP))
 		case OP_END:
 			f.WriteString(fmt.Sprintf("addr_%d:\n", i))
 		case OP_EQUALS:
@@ -73,9 +72,9 @@ func Compile(program []Op, output string) {
 	// add section .data with variables
 	f.WriteString("section .data\n")
 
-	for _, v := range vars {
-		f.WriteString(fmt.Sprintf("  %s: dq  %d\n", v.V, v.O))
-	}
+	//for _, v := range vars {
+	//	f.WriteString(fmt.Sprintf("  %s: dq  %d\n", v.V, v.O))
+	//}
 
 	f.Close()
 

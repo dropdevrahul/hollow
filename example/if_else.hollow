@@ -1,0 +1,27 @@
+
+2 == 2 if
+  1 .
+  4 == 3 if
+    3 .
+  else 
+    4 .
+  end
+  end
+  0 + 1000 .
+else
+  0 .
+end
+end
+
+3 == 2 if
+  1 .
+  4 == 3 if
+      3 .
+    else 
+      4 .
+    end
+  end
+  else
+    0 .
+  end
+end
