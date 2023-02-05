@@ -4,6 +4,9 @@ import (
 	"flag"
 	"log"
 	"os"
+
+	"github.com/dropdevrahul/hollow/parser"
+	"github.com/dropdevrahul/hollow/tokenizer"
 )
 
 func main() {
@@ -14,10 +17,12 @@ func main() {
 
 	flag.Parse()
 
-	program, err := Tokenize(flag.Args()[0])
+	t := tokenizer.Tokenizer{}
+
+	program, err := t.LexFile(flag.Args()[0])
 	if err != nil {
 		log.Println(err)
 	}
 
-	Compile(program, *output)
+	parser.Compile(program, *output)
 }

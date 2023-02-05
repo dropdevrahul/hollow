@@ -1,17 +1,9 @@
-30 == 20 if 
+20 == 20 if 
   300 dump 
 end 
- 400 dump
 
-20 == 20 if 
-  100 dump 
+3 == 20 if 
+  300 dump 
 end 
 
-1 == 1 if 
-  1 dump
-  2 == 2 if 
-    2 dump
-  end
-  3 dump
-end
-
+400 dump
