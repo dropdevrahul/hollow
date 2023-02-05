@@ -1,17 +1,17 @@
 30 == 20 if 
-  300 . 
+  300 dump 
 end 
- 400 .
+ 400 dump
 
 20 == 20 if 
-  100 . 
+  100 dump 
 end 
 
 1 == 1 if 
-  1 .
+  1 dump
   2 == 2 if 
-    2 .
+    2 dump
   end
-  3 .
+  3 dump
 end
 

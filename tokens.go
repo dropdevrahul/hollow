@@ -19,27 +19,34 @@ const (
 	OP_IF
 	OP_END
 	OP_ELSE
+	OP_MEM
+	OP_MEM_STORE
+	OP_MEM_LOAD
 	OP_COUNT
 )
 
 const (
-	S_OP_PLUS   = "+"
-	S_OP_SUB    = "-"
-	S_OP_MUL    = "*"
-	S_OP_DIV    = "/"
-	S_OP_MOD    = "%"
-	S_OP_DUMP   = "."
-	S_OP_EQUALS = "=="
-	S_OP_LTE    = "<="
-	S_OP_LT     = "<"
-	S_OP_GT     = ">"
-	S_OP_GTE    = ">="
-	S_OP_IF     = "if"
-	S_OP_END    = "end"
-	S_OP_ELSE   = "else"
+	S_OP_PLUS      = "+"
+	S_OP_SUB       = "-"
+	S_OP_MUL       = "*"
+	S_OP_DIV       = "/"
+	S_OP_MOD       = "%"
+	S_OP_DUMP      = "dump"
+	S_OP_EQUALS    = "=="
+	S_OP_LTE       = "<="
+	S_OP_LT        = "<"
+	S_OP_GT        = ">"
+	S_OP_GTE       = ">="
+	S_OP_IF        = "if"
+	S_OP_END       = "end"
+	S_OP_MEM       = "mem"
+	S_OP_MEM_STORE = ","
+	S_OP_MEM_LOAD  = "."
+	S_OP_ELSE      = "else"
 )
 
 var OP_SYMBOLS map[string]Opcode = map[string]Opcode{
+	S_OP_PLUS:   OP_PLUS,
 	S_OP_SUB:    OP_SUB,
 	S_OP_MUL:    OP_MUL,
 	S_OP_DIV:    OP_DIV,

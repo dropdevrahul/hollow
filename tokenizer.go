@@ -70,6 +70,25 @@ func OpEnd() Op {
 	}
 }
 
+func Mem() Op {
+	return Op{
+		N: OP_MEM,
+	}
+}
+
+func MemStore(x int) Op {
+	return Op{
+		N: OP_MEM_STORE,
+		O: x,
+	}
+}
+
+func MemLoad() Op {
+	return Op{
+		N: OP_MEM_LOAD,
+	}
+}
+
 func MakeBlocks(p Program) Program {
 	// set blocks for jump operations like If etc
 	stack := []int{}
@@ -121,7 +140,13 @@ func Tokenize(fpath string) (Program, error) {
 			if err != nil {
 				return p, err
 			}
-			o := Arithmatic(OP_SYMBOLS[w], t)
+
+			op, ok := OP_SYMBOLS[w]
+			if !ok {
+				log.Panicf("No valid symbol for %s", w)
+			}
+
+			o := Arithmatic(op, t)
 			p = append(p, o)
 		case S_OP_EQUALS, S_OP_GTE, S_OP_LTE, S_OP_GT, S_OP_LT:
 			// get operand
@@ -159,6 +184,21 @@ func Tokenize(fpath string) (Program, error) {
 		case S_OP_END:
 			// find end
 			o := OpEnd()
+			p = append(p, o)
+		case S_OP_MEM:
+			o := Mem()
+			p = append(p, o)
+		case S_OP_MEM_STORE:
+			scanner.Scan()
+			next := scanner.Text()
+			t, err := strconv.Atoi(next)
+			if err != nil {
+				return p, err
+			}
+			o := MemStore(t)
+			p = append(p, o)
+		case S_OP_MEM_LOAD:
+			o := MemLoad()
 			p = append(p, o)
 		default:
 			t, err := strconv.Atoi(w)

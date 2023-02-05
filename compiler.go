@@ -85,7 +85,18 @@ func Compile(program []Op, output string) {
 			f.WriteString("    pop rbx\n")
 			f.WriteString("    cmp rax, rbx\n")
 			f.WriteString(fmt.Sprintf("    %s rcx, rdx\n", op.INS))
-			f.WriteString("    push rcx\n")
+		case OP_MEM:
+			f.WriteString("    mov rax, stackmem\n")
+			f.WriteString("    push rax\n")
+		case OP_MEM_STORE:
+			f.WriteString(fmt.Sprintf("    push %d\n", op.O))
+			f.WriteString("    pop rax\n")
+			f.WriteString("    pop rbx\n")
+			f.WriteString("    mov [rbx], rax\n")
+		case OP_MEM_LOAD:
+			f.WriteString("    pop rax\n")
+			f.WriteString("    mov rbx, [rax]\n")
+			f.WriteString("    push rbx\n")
 		}
 	}
 
@@ -93,12 +104,9 @@ func Compile(program []Op, output string) {
 	f.WriteString("    mov rdi, 0\n")
 	f.WriteString("    syscall\n")
 
-	// add section .data with variables
-	f.WriteString("section .data\n")
-
-	//for _, v := range vars {
-	//	f.WriteString(fmt.Sprintf("  %s: dq  %d\n", v.V, v.O))
-	//}
+	// add section .bss for memory
+	f.WriteString("section .bss\n")
+	f.WriteString("    stackmem: resb 1000000\n")
 
 	f.Close()
 
