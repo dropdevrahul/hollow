@@ -6,6 +6,9 @@ const (
 	OP_PUSH = iota
 	OP_PLUS
 	OP_SUB
+	OP_MUL
+	OP_DIV
+	OP_MOD
 	OP_DUMP
 	OP_VAR
 	OP_EQUALS
@@ -18,6 +21,9 @@ const (
 const (
 	S_OP_PLUS   = "+"
 	S_OP_SUB    = "-"
+	S_OP_MUL    = "*"
+	S_OP_DIV    = "/"
+	S_OP_MOD    = "%"
 	S_OP_DUMP   = "."
 	S_OP_EQUALS = "=="
 	S_OP_IF     = "if"

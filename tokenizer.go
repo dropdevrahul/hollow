@@ -29,10 +29,32 @@ func Sub(x int) Op {
 	}
 }
 
+func Div(x int) Op {
+	return Op{
+		N: OP_DIV,
+		O: x,
+	}
+}
+
+func Mul(x int) Op {
+	return Op{
+		N: OP_MUL,
+		O: x,
+	}
+}
+
+func Mod(x int) Op {
+	return Op{
+		N: OP_MOD,
+		O: x,
+	}
+}
+
 func Dump() Op {
 	return Op{
 		N: OP_DUMP,
 	}
+
 }
 
 func Equals(x int) Op {
@@ -121,6 +143,33 @@ func Tokenize(fpath string) (Program, error) {
 				return p, err
 			}
 			o := Sub(t)
+			p = append(p, o)
+		case S_OP_DIV:
+			scanner.Scan()
+			w := scanner.Text()
+			t, err := strconv.Atoi(w)
+			if err != nil {
+				return p, err
+			}
+			o := Div(t)
+			p = append(p, o)
+		case S_OP_MUL:
+			scanner.Scan()
+			w := scanner.Text()
+			t, err := strconv.Atoi(w)
+			if err != nil {
+				return p, err
+			}
+			o := Mul(t)
+			p = append(p, o)
+		case S_OP_MOD:
+			scanner.Scan()
+			w := scanner.Text()
+			t, err := strconv.Atoi(w)
+			if err != nil {
+				return p, err
+			}
+			o := Mod(t)
 			p = append(p, o)
 		case S_OP_EQUALS:
 			// get operand

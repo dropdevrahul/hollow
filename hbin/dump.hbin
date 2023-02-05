@@ -1,4 +1,3 @@
-# Compilation provided by Compiler Explorer at https://godbolt.org/
 dump:
         push    rbp
         mov     rbp, rsp

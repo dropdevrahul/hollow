@@ -40,6 +40,27 @@ func Compile(program []Op, output string) {
 			f.WriteString("    pop rbx\n")
 			f.WriteString("    sub rbx, rax\n")
 			f.WriteString("    push rbx\n")
+		case OP_MUL:
+			f.WriteString(fmt.Sprintf("    push %d\n", op.O))
+			f.WriteString("    pop rcx\n")
+			f.WriteString("    pop rax\n")
+			f.WriteString("    mul rcx\n")
+			f.WriteString("    xor rcx, rcx\n") // contains higher bits
+			f.WriteString("    push rax\n")     // contains lower bits
+		case OP_DIV:
+			f.WriteString(fmt.Sprintf("    push %d\n", op.O))
+			f.WriteString("    xor rdx, rdx\n")
+			f.WriteString("    pop rcx\n") // first we pop divisor  dividend/divisor
+			f.WriteString("    pop rax\n") // div takes two register as dividend rdx:rax
+			f.WriteString("    div rcx\n")
+			f.WriteString("    push rax\n") // rax has quotient
+		case OP_MOD:
+			f.WriteString(fmt.Sprintf("    push %d\n", op.O))
+			f.WriteString("    xor rdx, rdx\n")
+			f.WriteString("    pop rcx\n") // first we pop divisor  dividend/divisor
+			f.WriteString("    pop rax\n") // div takes two register as dividend rdx:rax
+			f.WriteString("    div rcx\n")
+			f.WriteString("    push rcx\n") //rdx has remainder
 		case OP_DUMP:
 			f.WriteString("    pop rdi\n")
 			f.WriteString("    call dump\n")
