@@ -74,14 +74,17 @@ func Compile(program []Op, output string) {
 			f.WriteString(fmt.Sprintf("    jmp addr_%d\n", op.JMP))
 		case OP_END:
 			f.WriteString(fmt.Sprintf("addr_%d:\n", i))
-		case OP_EQUALS:
+		case OP_EQUALS, OP_GTE, OP_LTE, OP_LT, OP_GT:
+			if op.INS == "" {
+				log.Fatalf("No ins for Comparison operator %d", op.N)
+			}
 			f.WriteString(fmt.Sprintf("    push %d\n", op.O))
 			f.WriteString("    mov rcx, 0\n")
 			f.WriteString("    mov rdx, 1\n")
 			f.WriteString("    pop rax\n")
 			f.WriteString("    pop rbx\n")
 			f.WriteString("    cmp rax, rbx\n")
-			f.WriteString("    cmove rcx, rdx\n")
+			f.WriteString(fmt.Sprintf("    %s rcx, rdx\n", op.INS))
 			f.WriteString("    push rcx\n")
 		}
 	}

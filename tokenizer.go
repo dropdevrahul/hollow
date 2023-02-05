@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -15,37 +16,9 @@ func Push(x int) Op {
 	}
 }
 
-func Plus(x int) Op {
+func Arithmatic(op Opcode, x int) Op {
 	return Op{
-		N: OP_PLUS,
-		O: x,
-	}
-}
-
-func Sub(x int) Op {
-	return Op{
-		N: OP_SUB,
-		O: x,
-	}
-}
-
-func Div(x int) Op {
-	return Op{
-		N: OP_DIV,
-		O: x,
-	}
-}
-
-func Mul(x int) Op {
-	return Op{
-		N: OP_MUL,
-		O: x,
-	}
-}
-
-func Mod(x int) Op {
-	return Op{
-		N: OP_MOD,
+		N: op,
 		O: x,
 	}
 }
@@ -57,9 +30,24 @@ func Dump() Op {
 
 }
 
-func Equals(x int) Op {
+func Cmp(op Opcode, ins string, x int) Op {
 	return Op{
-		N: OP_EQUALS,
+		N:   op,
+		O:   x,
+		INS: ins,
+	}
+}
+
+func Gte(x int) Op {
+	return Op{
+		N: OP_GTE,
+		O: x,
+	}
+}
+
+func Lte(x int) Op {
+	return Op{
+		N: OP_LTE,
 		O: x,
 	}
 }
@@ -126,60 +114,36 @@ func Tokenize(fpath string) (Program, error) {
 	for scanner.Scan() {
 		w := scanner.Text()
 		switch w {
-		case S_OP_PLUS:
+		case S_OP_PLUS, S_OP_DIV, S_OP_MUL, S_OP_SUB, S_OP_MOD:
 			scanner.Scan()
-			w := scanner.Text()
-			t, err := strconv.Atoi(w)
+			next := scanner.Text()
+			t, err := strconv.Atoi(next)
 			if err != nil {
 				return p, err
 			}
-			o := Plus(t)
+			o := Arithmatic(OP_SYMBOLS[w], t)
 			p = append(p, o)
-		case S_OP_SUB:
-			scanner.Scan()
-			w := scanner.Text()
-			t, err := strconv.Atoi(w)
-			if err != nil {
-				return p, err
-			}
-			o := Sub(t)
-			p = append(p, o)
-		case S_OP_DIV:
-			scanner.Scan()
-			w := scanner.Text()
-			t, err := strconv.Atoi(w)
-			if err != nil {
-				return p, err
-			}
-			o := Div(t)
-			p = append(p, o)
-		case S_OP_MUL:
-			scanner.Scan()
-			w := scanner.Text()
-			t, err := strconv.Atoi(w)
-			if err != nil {
-				return p, err
-			}
-			o := Mul(t)
-			p = append(p, o)
-		case S_OP_MOD:
-			scanner.Scan()
-			w := scanner.Text()
-			t, err := strconv.Atoi(w)
-			if err != nil {
-				return p, err
-			}
-			o := Mod(t)
-			p = append(p, o)
-		case S_OP_EQUALS:
+		case S_OP_EQUALS, S_OP_GTE, S_OP_LTE, S_OP_GT, S_OP_LT:
 			// get operand
 			scanner.Scan()
-			w := scanner.Text()
-			t, err := strconv.Atoi(w)
+			next := scanner.Text()
+			t, err := strconv.Atoi(next)
 			if err != nil {
 				return p, err
 			}
-			o := Equals(t)
+
+			OP, ok := OP_SYMBOLS[w]
+			if !ok {
+				return p, errors.New("Not a valid symbol " + w)
+			}
+
+			ins, ok := CMP_INS[OP]
+			if !ok {
+				return p, errors.New("Not a valid symbol " + w)
+			}
+
+			o := Cmp(OP, ins, t)
+
 			p = append(p, o)
 		case S_OP_DUMP:
 			o := Dump()
